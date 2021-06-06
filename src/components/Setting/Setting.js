@@ -3,6 +3,7 @@ import styles from './Setting.module.css';
 
 import CellTypeSetting from './CellTypeSetting'
 import TableStructureSetting from './TableStructureSetting';
+import AlgorithmSetting from './AlgorithmSetting';
 
 function TableSetting(props){
     function onRowCountChangeHandler(event){
@@ -17,10 +18,24 @@ function TableSetting(props){
         props.onCellTypeSettingChange(event.target.value);
     }
 
+    function onAlgorithmSelectionHandler(event){
+        props.onAlgorithmSelection(event.target.value);
+    }
+
     return (
         <>
-            <CellTypeSetting onCellTypeSettingChange={onCellTypeSettingChangeHandler}></CellTypeSetting>
-            <TableStructureSetting rowCount={props.rowCount} colCount={props.colCount} onRowCountChange={onRowCountChangeHandler} onColCountChange={onColCountChangeHandler}></TableStructureSetting>
+            <CellTypeSetting 
+                onCellTypeSettingChange={onCellTypeSettingChangeHandler}>
+            </CellTypeSetting>
+            <TableStructureSetting 
+                rowCount={props.rowCount} 
+                colCount={props.colCount} 
+                onRowCountChange={onRowCountChangeHandler} 
+                onColCountChange={onColCountChangeHandler}>
+            </TableStructureSetting>
+            <AlgorithmSetting
+                onAlgorithmSelection={onAlgorithmSelectionHandler}>
+            </AlgorithmSetting>
         </>
     );
 };
