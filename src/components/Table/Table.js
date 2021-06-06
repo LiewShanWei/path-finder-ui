@@ -1,6 +1,7 @@
 import Cell from './Cell';
 
 function Table(props){
+
     function GenerateRowsAndCells(){
         let rows = [];
         for (var r = 0; r< props.rowCount; r++){

@@ -27,11 +27,12 @@ function Cell(props){
         <td 
             onClick={onCellClickHandler} 
             className={ 
-                (!isWall && styles.cell) || 
+                (!isStart && !isEnd && !isWall && styles.cell) ||
+                (isStart && styles.start)  ||
+                (isEnd && styles.end)  ||
                 (isWall && styles.wall) 
             }
         >
-
         </td>
     );
 };
