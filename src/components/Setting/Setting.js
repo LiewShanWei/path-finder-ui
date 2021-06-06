@@ -6,20 +6,20 @@ import TableStructureSetting from './TableStructureSetting';
 import AlgorithmSetting from './AlgorithmSetting';
 
 function TableSetting(props){
-    function onRowCountChangeHandler(event){
-        props.onRowCountChange(event.target.value);
+    function onRowCountChangeHandler(rowCount){
+        props.onRowCountChange(rowCount);
     };
 
-    function onColCountChangeHandler(event){
-        props.onColCountChange(event.target.value);
+    function onColCountChangeHandler(colCount){
+        props.onColCountChange(colCount);
     };
 
-    function onCellTypeSettingChangeHandler(event){
-        props.onCellTypeSettingChange(event.target.value);
+    function onCellTypeSettingChangeHandler(cellType){
+        props.onCellTypeSettingChange(cellType);
     }
 
-    function onAlgorithmSelectionHandler(event){
-        props.onAlgorithmSelection(event.target.value);
+    function onAlgorithmSelectionHandler(algorithm){
+        props.onAlgorithmSelection(algorithm);
     }
 
     return (

@@ -27,11 +27,13 @@ function App() {
   function StartVisualization(){
     if(algorithmSelected === "BFS"){
       // Run BFS
+      alert("Running bfs");
+      BFS();
     }
   }
 
   function BFS(){
-    
+
   }
 
   return (
