@@ -3,18 +3,17 @@ import styles from './TableSetting.module.css';
 import Card from '../UI/Card';
 
 function TableSetting(props){
-    const [enteredRowCount,setEnteredRowCount] = useState(props.rowCount);
-    const [enteredColCount,setEnteredColCount] = useState(props.colCount);
-
     function rowCountChangeHandler(event){
-        setEnteredRowCount(event.target.value);
-        props.onRowCountChange(enteredRowCount);
+        props.onRowCountChange(event.target.value);
     };
 
     function colCountChangeHandler(event){
-        setEnteredColCount(event.target.value);
-        props.onColCountChange(enteredColCount);
+        props.onColCountChange(event.target.value);
     };
+
+    function onCellTypeChangeHandler(event){
+        props.onCellTypeSelected(event.target.value);
+    }
 
     return (
         <>
@@ -22,22 +21,26 @@ function TableSetting(props){
                 <input 
                     type="radio"
                     value="RADIO_START" 
-                    name="table-setting-radio"/> Start
+                    name="table-setting-radio"
+                    defaultChecked
+                    onChange={onCellTypeChangeHandler}/> Start
                 <input 
                     type="radio"
                     value="RADIO_END" 
-                    name="table-setting-radio"/> End
+                    name="table-setting-radio"
+                    onChange={onCellTypeChangeHandler}/> End
                 <input 
                     type="radio"
                     value="RADIO_WALL" 
-                    name="table-setting-radio"/> Wall
+                    name="table-setting-radio"
+                    onChange={onCellTypeChangeHandler}/> Wall
             </Card>
             <Card>
                 <div>
                     <label>Number of Rows</label>
                     <input
-                        type='number' 
-                        value={enteredRowCount}
+                        type='number'
+                        value={props.rowCount} 
                         min="1" 
                         max="50"
                         step="1" 
@@ -48,7 +51,7 @@ function TableSetting(props){
                     <label>Number of Columns</label>
                     <input
                         type='number' 
-                        value={enteredColCount}
+                        value={props.colCount} 
                         min="1" 
                         max="50"
                         step="1" 
