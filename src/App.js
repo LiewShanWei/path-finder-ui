@@ -1,11 +1,24 @@
-import Table from './components/Table';
+import { useState } from 'react';
+import Table from './components/Table/Table';
+import TableSetting from './components/Table/TableSetting';
 
 function App() {
-  const rowCount = 20;
-  const colCount = 20;
+  const [rowCount,setRowCount] = useState(50);
+  const [colCount,setColCount] = useState(50);
+
+  function onRowCountChangeHandler(rowCount){
+    setRowCount(rowCount);
+  }
+
+  function onColCountChangeHandler(colCount){
+    setColCount(colCount);
+  }
 
   return (
-    <Table rowCount={rowCount} colCount={colCount}></Table>
+    <>
+      <TableSetting rowCount={rowCount} colCount={colCount} onRowCountChange={onRowCountChangeHandler} onColCountChange={onColCountChangeHandler}></TableSetting>
+      <Table rowCount={rowCount} colCount={colCount}></Table>
+    </>
   );
 }
 
