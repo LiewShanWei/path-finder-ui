@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Table from './components/Table/Table';
-import TableSetting from './components/Table/TableSetting';
+import TableSetting from './components/Setting/Setting';
 
 function App() {
   const [rowCount,setRowCount] = useState(50);
@@ -15,7 +15,7 @@ function App() {
     setColCount(colCount);
   }
 
-  function onCellTypeSelectedHandler(cellType){
+  function onCellTypeSettingChangeHandler(cellType){
     setCellType(cellType);
   }
 
@@ -26,7 +26,7 @@ function App() {
         colCount={colCount} 
         onRowCountChange={onRowCountChangeHandler} 
         onColCountChange={onColCountChangeHandler} 
-        onCellTypeSelected={onCellTypeSelectedHandler}>
+        onCellTypeSettingChange={onCellTypeSettingChangeHandler}>
       </TableSetting>
       <Table 
         rowCount={rowCount} 
