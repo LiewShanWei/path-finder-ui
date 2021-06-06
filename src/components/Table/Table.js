@@ -1,6 +1,9 @@
 import Cell from './Cell';
+import { useState } from 'react';
 
 function Table(props){
+    const [startCell, setStartCell] = useState();
+    const [endCell, setEndCell] = useState();
 
     function GenerateRows(){
         let rows = []; // Holds row elements
@@ -27,6 +30,16 @@ function Table(props){
         );
     };
 
+    function setCellTypeStartHandler(id){
+        setStartCell(id);
+        console.log("Current start cell:" + id);
+    }
+
+    function setCellTypeEndHandler(id){
+        setEndCell(id);
+        console.log("Current end cell:" + id);
+    }
+
     function GenerateDefaultCell(rowIndex,colIndex,cellType){
         let cellId = `cell-${rowIndex+1}-${colIndex+1}`
         return (
@@ -34,6 +47,8 @@ function Table(props){
                 key={cellId} 
                 id={cellId} 
                 cellType={cellType}
+                onSetCellTypeStartHandler={setCellTypeStartHandler}
+                onSetCellTypeEndHandler={setCellTypeEndHandler}
             >
             </Cell>
         );

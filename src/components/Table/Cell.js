@@ -8,15 +8,17 @@ function Cell(props){
 
     function onCellClickHandler(){
         const cellType = props.cellType;
-        if(cellType == "RADIO_START"){
+        if(cellType === "RADIO_START"){
             setIsStart(true);
             setIsEnd(false);
             setIsWall(false);
-        } else if (cellType == "RADIO_END"){
+            props.onSetCellTypeStartHandler(props.id)
+        } else if (cellType === "RADIO_END"){
             setIsStart(false);
             setIsEnd(true);
             setIsWall(false);
-        } else if (cellType == "RADIO_WALL"){
+            props.onSetCellTypeEndHandler(props.id)
+        } else if (cellType === "RADIO_WALL"){
             setIsStart(false);
             setIsEnd(false);
             setIsWall(!isWall);
