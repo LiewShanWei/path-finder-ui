@@ -25,6 +25,7 @@ function Cell(props){
 
     return (
         <td 
+            id={props.id}
             onClick={onCellClickHandler} 
             className={ 
                 (!isStart && !isEnd && !isWall && styles.cell) ||

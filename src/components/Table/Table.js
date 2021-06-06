@@ -9,9 +9,9 @@ function Table(props){
             let cell = []
             for (var c=0; c<props.colCount;c++){
                 let cellId = `cell-${r+1}-${c+1}`
-                cell.push(<Cell key={cellId} cellType={props.cellType}></Cell>)
+                cell.push(<Cell key={cellId} id={cellId} cellType={props.cellType}></Cell>)
             }
-            rows.push(<tr key={rowId}>{cell}</tr>)
+            rows.push(<tr key={rowId} id={rowId}>{cell}</tr>)
         }
 
         return rows;
