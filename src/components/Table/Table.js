@@ -9,8 +9,8 @@ const Table = (props) => {
     const [animationQueue, setAnimationQueue] = useState([]);
     const [visitedCells , setVisitedCells] = useState([]);
 
-    const rowCount = 50;
-    const colCount = 100;
+    const rowCount = 10;
+    const colCount = 10;
 
     useEffect(() => {
         let cellArray = [];
@@ -140,6 +140,22 @@ const Table = (props) => {
         ))
     }
 
+    const isCellAlreadyVisited = (visitedCells, cellId) => {
+        if(visitedCells !== undefined && visitedCells.length > 0){
+            const isFound = visitedCells.find((element) => { return element === cellId;}) 
+            if(isFound){
+                console.log("Already visited: " + cellId);
+                return true;
+            } else{
+                console.log("Not visited: " + cellId);
+                return false;
+            }
+        }
+
+        console.log("Not visited: " + cellId);
+        return false;
+    }
+
 
     useEffect(() => {
         if(props.startVisualization){
@@ -157,20 +173,48 @@ const Table = (props) => {
 
             while(animationQueue.length > 0){
                 var cellIdParent = animationQueue.pop();
+                console.log("Parent: " + cellIdParent);
                 var rowPos = cellIdParent.split("-")[0];
-                var cellPos = cellIdParent.split("-")[1];
+                var colPos = cellIdParent.split("-")[1];
 
-                var childTopId = rowPos-1 + "-" + cellPos;
-                var childLeftId = rowPos + "-" + cellPos-1;
-                var childRightId = rowPos + "-" + cellPos+1;
-                var childBottomId = rowPos+1 + "-" + cellPos;
+                var childTopId = parseInt(rowPos-1) + "-" + parseInt(colPos);
+                var childLeftId = parseInt(rowPos) + "-" + parseInt(colPos-1);
+                var childRightId = parseInt(rowPos) + "-" + (parseInt(colPos)+1);
+                var childBottomId = (parseInt(rowPos)+1) + "-" + parseInt(colPos);
 
-
+                if(isCellInBoard(rowPos-1,colPos) && !isCellAlreadyVisited(visitedCells,childTopId)){
+                    visitedCells.push(childTopId);
+                    animationQueue.push(childTopId);
+                    console.log("Pushed top child to queue: " + childTopId);
+                }
+                if(isCellInBoard(parseInt(rowPos)+1,colPos) && !isCellAlreadyVisited(visitedCells,childBottomId)){
+                    visitedCells.push(childBottomId);
+                    animationQueue.push(childBottomId);
+                    console.log("Pushed bottom child to queue: " + childBottomId);
+                }
+                if(isCellInBoard(rowPos,colPos-1) && !isCellAlreadyVisited(visitedCells,childLeftId)){
+                    visitedCells.push(childLeftId);
+                    animationQueue.push(childLeftId);
+                    console.log("Pushed left child to queue: " + childLeftId);
+                }
+                if(isCellInBoard(rowPos,parseInt(colPos)+1) && !isCellAlreadyVisited(visitedCells,childRightId)){
+                    visitedCells.push(childRightId);
+                    animationQueue.push(childRightId);
+                    console.log("Pushed right child to queue: " + childRightId);
+                }
             }
         }
-    }, [props.startVisualization])
+    }, [props.startVisualization]);
 
-    function printCellsHelper(){
+    const isCellInBoard = (rowPos, colPos) => {
+        const validRow = rowPos >=0 && rowPos < rowCount;
+        const validCol = colPos >=0 && colPos < colCount;
+        //console.log("Cell in board: " + rowPos + " " + colPos);
+        //console.log(validRow && validCol);
+        return validRow && validCol;
+    }
+
+    const printCellsHelper = () => {
         console.log("cells");
         console.log(cells);
         console.log("startCell");
