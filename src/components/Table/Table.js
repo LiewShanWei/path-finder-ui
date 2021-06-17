@@ -17,7 +17,7 @@ const Table = (props) => {
         for( var r = 0; r<rowCount; r++){
             let currentRowArray = [];
             for(var c=0;c<colCount;c++){
-                let cellId = `cell-${r}-${c}`;
+                let cellId = `${r}-${c}`;
                 currentRowArray.push(cellId);
             }
             cellArray.push(currentRowArray);
@@ -33,7 +33,7 @@ const Table = (props) => {
             let currentRowArray = [];
             let cellsHtml = [];
             for( var c = 0; c<colCount; c++){
-                let cellId = `cell-${r}-${c}`
+                let cellId = `${r}-${c}`
                 cellsHtml.push(generateDefaultCell(cellId));
                 currentRowArray.push(cellId);
             }
@@ -128,7 +128,7 @@ const Table = (props) => {
         ));
     };
 
-    const removeFromAnimationQueue = (cellId) => {
+    const removeFirstFromAnimationQueue = (cellId) => {
         setAnimationQueue(previousState => {
             previousState.slice(1);
         })
@@ -145,12 +145,28 @@ const Table = (props) => {
         if(props.startVisualization){
             if(!startCell || !endCell){
                 console.log("Missing start/endcells");
-                //Insert modal informing about missing start/end cell
+                //todo: Insert modal informing about missing start/end cell
                 return;
             }
+            //printCellsHelper();
 
-            addToVisitedCells(startCell);
-            printCellsHelper();
+            let visitedCells = [];
+            visitedCells.push(startCell);
+            let animationQueue = [];
+            animationQueue.push(startCell);
+
+            while(animationQueue.length > 0){
+                var cellIdParent = animationQueue.pop();
+                var rowPos = cellIdParent.split("-")[0];
+                var cellPos = cellIdParent.split("-")[1];
+
+                var childTopId = rowPos-1 + "-" + cellPos;
+                var childLeftId = rowPos + "-" + cellPos-1;
+                var childRightId = rowPos + "-" + cellPos+1;
+                var childBottomId = rowPos+1 + "-" + cellPos;
+
+
+            }
         }
     }, [props.startVisualization])
 
