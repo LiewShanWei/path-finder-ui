@@ -1,25 +1,36 @@
+import React, { useState } from 'react';
 import Cell from './Cell';
-import { useState } from 'react';
 
-function Table(props){
-    const [startCell, setStartCell] = useState();
-    const [endCell, setEndCell] = useState();
+const Table = (props) => {
+    const [cells,setCells] = useState([]);
+    const [walls,setWalls] = useState([]);
+    const [startCell,setStartCell] = useState(null);
+    const [endCell, setEndCell] = useState(null);
 
-    function GenerateRows(){
-        let rows = []; // Holds row elements
-        for (var r = 0; r< props.rowCount; r++){
-            let cells = [] // Holds cell elements
-            for (var c=0; c<props.colCount;c++){
-                cells.push(GenerateDefaultCell(r,c,props.cellType))
+    const rowCount = 50;
+    const colCount = 100;
+
+    const generateTableCells = () => {
+        let cellArray = [];
+        let rowsHtml = [];
+        for( var r = 0; r<rowCount;r++){
+            let currentRowArray = [];
+            let cellsHtml = [];
+            for( var c = 0; c<colCount; c++){
+                let cellId = `cell-${r}-${c}`
+                cellsHtml.push(generateDefaultCell(cellId));
+                currentRowArray.push(cellId);
             }
-            rows.push(GenerateDefaultRow(r,cells))
+            rowsHtml.push(generateDefaultRow(r,cellsHtml))
+            cellArray.push(currentRowArray);
         }
 
-        return rows;
-    }
+        //setCells(cellArray);
+        return rowsHtml;
+    };
 
-    function GenerateDefaultRow(rowIndex, cell){
-        let rowId = `row-${rowIndex+1}`
+    const generateDefaultRow = (rowIndex, cell) => {
+        let rowId = `row-${rowIndex}`
         return (
             <tr 
                 key={rowId} 
@@ -30,34 +41,70 @@ function Table(props){
         );
     };
 
-    function setCellTypeStartHandler(id){
-        setStartCell(id);
-        console.log("Current start cell:" + id);
-    }
-
-    function setCellTypeEndHandler(id){
-        setEndCell(id);
-        console.log("Current end cell:" + id);
-    }
-
-    function GenerateDefaultCell(rowIndex,colIndex,cellType){
-        let cellId = `cell-${rowIndex+1}-${colIndex+1}`
+    const generateDefaultCell = (cellId) => {
         return (
             <Cell 
                 key={cellId} 
                 id={cellId} 
-                cellType={cellType}
-                onSetCellTypeStartHandler={setCellTypeStartHandler}
-                onSetCellTypeEndHandler={setCellTypeEndHandler}
+                startCell={startCell}
+                endCell={endCell}
+                selectedCellType = {props.currentSelectedCellType}
+                onCellClick={onCellClickHandler}
             >
             </Cell>
         );
     }
 
+    const onCellClickHandler = (cellId) => {
+        const cellType = props.currentSelectedCellType;
+        if(cellType === 'start'){
+            if(cellId === endCell)
+                setEndCell();
+            setStartCell(cellId);
+            removeWallInArray(cellId);
+
+        } else if (cellType === 'end'){
+            if(cellId === startCell)
+                setStartCell();
+            setEndCell(cellId);
+            removeWallInArray(cellId);
+        } else if (cellType === 'wall'){
+            if(cellId === startCell)
+                setStartCell();
+            if(cellId === endCell)
+                setEndCell();
+            addWallToArray(cellId);
+        } else if (cellType === 'clear'){
+            if(cellId === startCell)
+                setStartCell();
+            if(cellId === endCell)
+                setEndCell();
+            removeWallInArray(cellId);
+        }
+    }
+
+    const isInWallArray = (cellId) => {
+        return walls.find((element) => { return element === cellId;}) === undefined;
+    };
+    const removeWallInArray = (cellId) => {
+        if(isInWallArray(cellId)){
+            setWalls(previousState => {
+                previousState.filter((cellToRemove) => cellToRemove !== cellId)
+            });
+        };
+    };
+    const addWallToArray = (cellId) => {
+        if(isInWallArray(cellId)){
+            setWalls(previousState => (
+                [...previousState, cellId]
+            ));
+        };
+    };
+
     return (
         <table>
             <tbody>
-                {GenerateRows()}
+                {generateTableCells()}
             </tbody>
         </table>
     );

@@ -1,7 +1,8 @@
 .cell {
     border: 1px solid #61DBFB;
-    width: 25px;
-    height: 25px;
+    width: 15px;
+    height: 15px;
+    padding:0;
 }
 
 .start{

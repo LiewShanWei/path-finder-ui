@@ -1,40 +1,33 @@
 import { useState } from 'react';
 import styles from './Cell.module.css';
 
-function Cell(props){
-    const [isStart, setIsStart] = useState(false);
-    const [isEnd, setIsEnd] = useState(false);
-    const [isWall, setIsWall] = useState(false);
+const Cell = (props) => {
+    const [isWall, setIsWall]= useState(false);
 
-    function onCellClickHandler(){
-        const cellType = props.cellType;
-        if(cellType === "RADIO_START"){
-            setIsStart(true);
-            setIsEnd(false);
+    let isStartCellClass = `${props.startCell === props.id ? styles.start : '' }`;
+    let isEndCellClass = `${props.endCell === props.id ? styles.end : '' }`;
+    let isNeitherCellType = `${!isStartCellClass && !isEndCellClass ? styles.cell : '' }`
+    let isWallCellType = `${isWall ? styles.wall : ''}`;
+    let combinedCellClass = `${isStartCellClass} ${isEndCellClass} ${isWallCellType} ${isNeitherCellType}`;
+    
+    const onCellClickHandler = (event) => {
+        if(props.selectedCellType === 'start' || props.selectedCellType === 'end'){
             setIsWall(false);
-            props.onSetCellTypeStartHandler(props.id)
-        } else if (cellType === "RADIO_END"){
-            setIsStart(false);
-            setIsEnd(true);
+            props.onCellClick(event.target.id);
+        } else if (props.selectedCellType === 'wall'){
+            setIsWall(true);
+            props.onCellClick(event.target.id);
+        } else if(props.selectedCellType === 'clear'){
             setIsWall(false);
-            props.onSetCellTypeEndHandler(props.id)
-        } else if (cellType === "RADIO_WALL"){
-            setIsStart(false);
-            setIsEnd(false);
-            setIsWall(!isWall);
+            props.onCellClick(event.target.id);
         }
     };
 
     return (
         <td 
             id={props.id}
-            onClick={onCellClickHandler} 
-            className={ 
-                (!isStart && !isEnd && !isWall && styles.cell) ||
-                (isStart && styles.start)  ||
-                (isEnd && styles.end)  ||
-                (isWall && styles.wall) 
-            }
+            className={combinedCellClass}
+            onClick={onCellClickHandler}
         >
         </td>
     );
