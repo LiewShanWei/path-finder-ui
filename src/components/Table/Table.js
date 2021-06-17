@@ -142,28 +142,32 @@ const Table = (props) => {
 
 
     useEffect(() => {
-        function printCellsHelper(){
-            console.log("cells");
-            console.log(cells);
-            console.log("startCell");
-            console.log(startCell);
-            console.log("endCell");
-            console.log(endCell);
-            console.log("walls");
-            console.log(walls);
-            console.log("animationQueue");
-            console.log(animationQueue);
-            console.log("visitedCells");
-            console.log(visitedCells);
-        }
-
         if(props.startVisualization){
+            if(!startCell || !endCell){
+                console.log("Missing start/endcells");
+                //Insert modal informing about missing start/end cell
+                return;
+            }
+
             addToVisitedCells(startCell);
             printCellsHelper();
         }
     }, [props.startVisualization])
 
-    
+    function printCellsHelper(){
+        console.log("cells");
+        console.log(cells);
+        console.log("startCell");
+        console.log(startCell);
+        console.log("endCell");
+        console.log(endCell);
+        console.log("walls");
+        console.log(walls);
+        console.log("animationQueue");
+        console.log(animationQueue);
+        console.log("visitedCells");
+        console.log(visitedCells);
+    }
 
     return (
         <table>
