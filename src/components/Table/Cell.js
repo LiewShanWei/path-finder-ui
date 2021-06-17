@@ -11,6 +11,7 @@ const Cell = (props) => {
     let combinedCellClass = `${isStartCellClass} ${isEndCellClass} ${isWallCellType} ${isNeitherCellType}`;
     
     const onCellClickHandler = (event) => {
+        console.log('Cell onclick: ' + props.selectedCellType);
         if(props.selectedCellType === 'start' || props.selectedCellType === 'end'){
             setIsWall(false);
             props.onCellClick(event.target.id);

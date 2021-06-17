@@ -20,7 +20,7 @@ const CellTypeSetting = (props) => {
     return (
         <Card>
              <FormControl component="fieldset">
-                <FormLabel component="legend">Cell Type</FormLabel>
+                <FormLabel component="legend">Select a Cell Type</FormLabel>
                 <RadioGroup aria-label="celltype" name="celltype" value={currentSelectedCellType} onChange={onSelectCellTypeHandler}>
                     <FormControlLabel value="start" control={<Radio />} label="Start" />
                     <FormControlLabel value="end" control={<Radio />} label="End" />
