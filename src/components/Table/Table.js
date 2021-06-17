@@ -2,38 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Cell from './Cell';
 
 const Table = (props) => {
-    const [cellsHtml, setCellsHtml] = useState();
     const [cells,setCells] = useState([]);
     const [walls,setWalls] = useState([]);
     const [startCell,setStartCell] = useState();
     const [endCell, setEndCell] = useState();
     const [animationQueue, setAnimationQueue] = useState([]);
     const [visitedCells , setVisitedCells] = useState([]);
-    const [startVisualization, setStartVisualization] = useState(props.startVisualization);
 
     const rowCount = 50;
     const colCount = 100;
-
-    console.log(props.currentSelectedCellType);
-
-    // useEffect(() => {
-    //     let cellArray = [];
-    //     let rowsHtml = [];
-    //     for( var r = 0; r<rowCount;r++){
-    //         let currentRowArray = [];
-    //         let cellsHtml = [];
-    //         for( var c = 0; c<colCount; c++){
-    //             let cellId = `cell-${r}-${c}`
-    //             cellsHtml.push(generateDefaultCell(cellId));
-    //             currentRowArray.push(cellId);
-    //         }
-    //         rowsHtml.push(generateDefaultRow(r,cellsHtml))
-    //         cellArray.push(currentRowArray);
-    //     }
-
-    //     setCells(cellArray);
-    //     setCellsHtml(rowsHtml);
-    // }, [])
 
     useEffect(() => {
         let cellArray = [];
@@ -64,8 +41,6 @@ const Table = (props) => {
             cellArray.push(currentRowArray);
         }
 
-        //setCells(cellArray);
-        //setCellsHtml(rowsHtml);
         return rowsHtml;
     };
 
@@ -97,7 +72,6 @@ const Table = (props) => {
 
     const onCellClickHandler = (cellId) => {
         const cellType = props.currentSelectedCellType;
-        console.log("About to change to cell: " + cellType);
         if(cellType === 'start'){
             if(cellId === endCell)
                 setEndCell();
@@ -109,12 +83,14 @@ const Table = (props) => {
                 setStartCell();
             setEndCell(cellId);
             removeWallInArray(cellId);
+
         } else if (cellType === 'wall'){
             if(cellId === startCell)
                 setStartCell();
             if(cellId === endCell)
                 setEndCell();
             addWallToArray(cellId);
+
         } else if (cellType === 'clear'){
             if(cellId === startCell)
                 setStartCell();
@@ -163,7 +139,6 @@ const Table = (props) => {
             [...previousState, cellId]
         ))
     }
-
 
 
     useEffect(() => {

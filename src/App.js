@@ -10,7 +10,6 @@ function App() {
 
   const onSelectCellTypeHandler = (newCellType) => {
     setCurrentSelectedCellType(newCellType);
-    console.log("New cell type: " + currentSelectedCellType);
   }
 
   const startVisualizing = () => {
