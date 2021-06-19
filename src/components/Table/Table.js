@@ -20,6 +20,7 @@ const Table = (props) => {
 
     //Generates the cell array 
     useEffect(() => {
+        console.log("Table.useEffect(), [] running");
         let cellArray = [];
         for( var r = 0; r<rowCount; r++){
             let currentRowArray = [];
@@ -36,6 +37,7 @@ const Table = (props) => {
 
     //Generates table html 
     const generateTableCells = () => {
+        console.log("Table.generateTableCells() running");
         let cellCount = 0;
         let cellArray = [];
         let rowsHtml = [];
@@ -51,9 +53,6 @@ const Table = (props) => {
             rowsHtml.push(generateDefaultRow(r,cellsHtml))
             cellArray.push(currentRowArray);
         }
-
-        console.log("Generate table cell ref");
-        console.log(cellRefs);
         return rowsHtml;
     };
 
@@ -89,6 +88,7 @@ const Table = (props) => {
 
     //Handler for start/end/wall/clear cell clicks
     const onCellClickHandler = (cellId) => {
+        console.log("Table.onCellClickHandler() running");
         const cellType = props.currentSelectedCellType;
         if(cellType === 'start'){
             if(cellId === endCell)
@@ -177,7 +177,6 @@ const Table = (props) => {
     const getCellIndex = (rowIndex, colIndex) => {
         const rowPos = parseInt(rowIndex);
         const cellPos = (rowPos*colCount) + parseInt(colIndex);
-        console.log("Row index: " + rowIndex + " " + colIndex + " " + cellPos);
         return cellPos;
     };
 
@@ -195,12 +194,9 @@ const Table = (props) => {
             visitedCells.push(startCell);
             let animationQueue = [];
             animationQueue.push(startCell);
-            console.log("Cell refs");
-            console.log(cellRefs);
 
             while(animationQueue.length > 0){
                 var cellIdParent = animationQueue.pop();
-                console.log("Parent: " + cellIdParent);
                 var rowPos = cellIdParent.split("-")[0];
                 var colPos = cellIdParent.split("-")[1];
 
