@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef , createRef} from 'react';
 import Cell from './Cell';
+import styles from './Cell.module.css';
 
 const Table = (props) => {
     const [cells,setCells] = useState([]);
@@ -9,8 +10,8 @@ const Table = (props) => {
     const [animationQueue, setAnimationQueue] = useState([]);
     const [visitedCells , setVisitedCells] = useState([]);
 
-    const rowCount = 10;
-    const colCount = 10;
+    const rowCount = 2;
+    const colCount = 3;
     const totalCellCount = rowCount * colCount;
     const cellRefs = useRef(new Array(totalCellCount).map(() => createRef()));
     
@@ -72,23 +73,34 @@ const Table = (props) => {
     //Generates <Cell> html
     const generateDefaultCell = (cellId, cellCount) => {
         return (
-            <Cell 
+            <td 
                 ref={(el) => cellRefs.current[cellCount] = el}
                 key={cellId} 
                 id={cellId} 
-                startCell={startCell}
-                endCell={endCell}
-                selectedCellType = {props.currentSelectedCellType}
-                onCellClick={onCellClickHandler}
-                cellCount={cellCount}
+                className={generateCellClass(cellId)}
+                onClick={onCellClickHandler}
             >
-            </Cell>
+                {cellId}
+            </td>
         );
+    }
+    const generateCellClass = (cellId) => {
+        console.log("Generating cell class: " + cellId);
+        if(cellId === startCell)
+            return `${styles.cell} ${styles.start}`;    
+        else if (cellId === endCell)
+            return `${styles.cell} ${styles.end}`;    
+        else if (isInWallArray(cellId)){
+            return `${styles.cell} ${styles.wall}`;   
+        } 
+        else
+            return `${styles.cell}`;
     }
 
     //Handler for start/end/wall/clear cell clicks
-    const onCellClickHandler = (cellId) => {
+    const onCellClickHandler = (event) => {
         console.log("Table.onCellClickHandler() running");
+        const cellId = event.target.id;
         const cellType = props.currentSelectedCellType;
         if(cellType === 'start'){
             if(cellId === endCell)
@@ -120,19 +132,21 @@ const Table = (props) => {
 
     //Helper function for modifying wall array state
     const isInWallArray = (cellId) => {
-        if(walls !== undefined && walls.length > 0)
-            return walls.find((element) => { return element === cellId;}) === undefined;
+        if(walls !== undefined && walls.length > 0){
+            return walls.find((element) => { return element === cellId;}) !== undefined;
+        }
+            
         return false;
     };
     const removeWallInArray = (cellId) => {
         if(isInWallArray(cellId)){
             setWalls(previousState => {
-                previousState.filter((cellToRemove) => cellToRemove !== cellId)
+                return previousState.filter((cellToRemove) => cellToRemove !== cellId);
             });
         };
     };
     const addWallToArray = (cellId) => {
-        if(isInWallArray(cellId)){
+        if(!isInWallArray(cellId)){
             setWalls(previousState => (
                 [...previousState, cellId]
             ));
@@ -175,6 +189,7 @@ const Table = (props) => {
 
     //Helper function to get current cell count
     const getCellIndex = (rowIndex, colIndex) => {
+        console.log("Get cell index: " + rowIndex + " " + colIndex);
         const rowPos = parseInt(rowIndex);
         const cellPos = (rowPos*colCount) + parseInt(colIndex);
         return cellPos;
@@ -189,7 +204,17 @@ const Table = (props) => {
                 return;
             }
             //printCellsHelper();
-
+            console.log("cells");
+            console.log(cells);
+            console.log("startCell");
+            console.log(startCell);
+            console.log("endCell");
+            console.log(endCell);
+            console.log("walls");
+            console.log(walls);
+            console.log("refs");
+            console.log(cellRefs);
+            
             let visitedCells = [];
             visitedCells.push(startCell);
             let animationQueue = [];
@@ -200,30 +225,40 @@ const Table = (props) => {
                 var rowPos = cellIdParent.split("-")[0];
                 var colPos = cellIdParent.split("-")[1];
 
-                var childTopId = parseInt(rowPos-1) + "-" + parseInt(colPos);
-                var childLeftId = parseInt(rowPos) + "-" + parseInt(colPos-1);
-                var childRightId = parseInt(rowPos) + "-" + (parseInt(colPos)+1);
-                var childBottomId = (parseInt(rowPos)+1) + "-" + parseInt(colPos);
+                var rowAbove = parseInt(rowPos)-1;
+                var colLeft = parseInt(colPos)-1;
+                var rowBelow = parseInt(rowPos)+1;
+                var colRight = parseInt(colPos)+1;
 
-                if(isCellInBoard(rowPos-1,colPos) && !isCellAlreadyVisited(visitedCells,childTopId)){
-                    const cellIndex = getCellIndex(rowPos-1,colPos);
-                    var element = cellRefs[cellIndex].current
-                    console.log(element);
+                var childTopId = rowAbove + "-" + colPos;
+                var childLeftId = rowPos + "-" + colLeft
+                var childRightId = rowPos + "-" + colRight;
+                var childBottomId = rowBelow + "-" + colPos;
+
+                if(isCellInBoard(rowAbove,colPos) && !isCellAlreadyVisited(visitedCells,childTopId)){
+                    const cellIndex = getCellIndex(rowAbove,colPos);
+                    var element = cellRefs.current[cellIndex];
                     visitedCells.push(childTopId);
                     animationQueue.push(childTopId);
                     console.log("Pushed top child to queue: " + childTopId);
                 }
-                if(isCellInBoard(parseInt(rowPos)+1,colPos) && !isCellAlreadyVisited(visitedCells,childBottomId)){
+                if(isCellInBoard(rowBelow,colPos) && !isCellAlreadyVisited(visitedCells,childBottomId)){
+                    const cellIndex = getCellIndex(rowBelow,colPos);
+                    var element = cellRefs.current[cellIndex];
                     visitedCells.push(childBottomId);
                     animationQueue.push(childBottomId);
                     console.log("Pushed bottom child to queue: " + childBottomId);
                 }
-                if(isCellInBoard(rowPos,colPos-1) && !isCellAlreadyVisited(visitedCells,childLeftId)){
+                if(isCellInBoard(rowPos,colLeft) && !isCellAlreadyVisited(visitedCells,childLeftId)){
+                    const cellIndex = getCellIndex(rowPos,colLeft);
+                    var element = cellRefs.current[cellIndex];
                     visitedCells.push(childLeftId);
                     animationQueue.push(childLeftId);
                     console.log("Pushed left child to queue: " + childLeftId);
                 }
-                if(isCellInBoard(rowPos,parseInt(colPos)+1) && !isCellAlreadyVisited(visitedCells,childRightId)){
+                if(isCellInBoard(rowPos,colRight) && !isCellAlreadyVisited(visitedCells,childRightId)){
+                    const cellIndex = getCellIndex(rowPos,colRight);
+                    var element = cellRefs.current[cellIndex];
                     visitedCells.push(childRightId);
                     animationQueue.push(childRightId);
                     console.log("Pushed right child to queue: " + childRightId);
@@ -233,6 +268,7 @@ const Table = (props) => {
     }, [props.startVisualization]);
 
     const isCellInBoard = (rowPos, colPos) => {
+        console.log("Is this cell in board: " + rowPos + " " + colPos);
         const validRow = rowPos >=0 && rowPos < rowCount;
         const validCol = colPos >=0 && colPos < colCount;
         return validRow && validCol;
