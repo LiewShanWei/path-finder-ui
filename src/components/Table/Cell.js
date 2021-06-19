@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import styles from './Cell.module.css';
 
-const Cell = (props) => {
+const Cell = React.forwardRef((props,ref) => {
     const [isWall, setIsWall]= useState(false);
 
     let isStartCellClass = `${props.startCell === props.id ? styles.start : '' }`;
@@ -25,12 +25,14 @@ const Cell = (props) => {
 
     return (
         <td 
+            ref={ref}
             id={props.id}
             className={combinedCellClass}
             onClick={onCellClickHandler}
         >
+            {props.cellCount}
         </td>
     );
-};
+});
 
 export default Cell;

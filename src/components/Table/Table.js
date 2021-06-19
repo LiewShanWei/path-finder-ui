@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef , createRef} from 'react';
 import Cell from './Cell';
 
 const Table = (props) => {
@@ -11,8 +11,12 @@ const Table = (props) => {
 
     const rowCount = 10;
     const colCount = 10;
+    const totalCellCount = rowCount * colCount;
+    const cellRefs = useRef(new Array(totalCellCount).map(() => createRef()));
     
-    let cellRefs = useRef([]);
+    //todo list
+    // Bring <Cell> to <td> for simplicity 
+    // Can start cell / end cell be stateless?
 
     //Generates the cell array 
     useEffect(() => {
@@ -32,6 +36,7 @@ const Table = (props) => {
 
     //Generates table html 
     const generateTableCells = () => {
+        let cellCount = 0;
         let cellArray = [];
         let rowsHtml = [];
         for( var r = 0; r<rowCount;r++){
@@ -39,13 +44,16 @@ const Table = (props) => {
             let cellsHtml = [];
             for( var c = 0; c<colCount; c++){
                 let cellId = `${r}-${c}`
-                cellsHtml.push(generateDefaultCell(cellId));
+                cellsHtml.push(generateDefaultCell(cellId,cellCount));
                 currentRowArray.push(cellId);
+                cellCount++;
             }
             rowsHtml.push(generateDefaultRow(r,cellsHtml))
             cellArray.push(currentRowArray);
         }
 
+        console.log("Generate table cell ref");
+        console.log(cellRefs);
         return rowsHtml;
     };
 
@@ -66,12 +74,14 @@ const Table = (props) => {
     const generateDefaultCell = (cellId, cellCount) => {
         return (
             <Cell 
+                ref={(el) => cellRefs.current[cellCount] = el}
                 key={cellId} 
                 id={cellId} 
                 startCell={startCell}
                 endCell={endCell}
                 selectedCellType = {props.currentSelectedCellType}
                 onCellClick={onCellClickHandler}
+                cellCount={cellCount}
             >
             </Cell>
         );
@@ -185,6 +195,8 @@ const Table = (props) => {
             visitedCells.push(startCell);
             let animationQueue = [];
             animationQueue.push(startCell);
+            console.log("Cell refs");
+            console.log(cellRefs);
 
             while(animationQueue.length > 0){
                 var cellIdParent = animationQueue.pop();
@@ -199,8 +211,8 @@ const Table = (props) => {
 
                 if(isCellInBoard(rowPos-1,colPos) && !isCellAlreadyVisited(visitedCells,childTopId)){
                     const cellIndex = getCellIndex(rowPos-1,colPos);
-                    //var element = cellRefs[cellIndex].current
-                    //console.log(element);
+                    var element = cellRefs[cellIndex].current
+                    console.log(element);
                     visitedCells.push(childTopId);
                     animationQueue.push(childTopId);
                     console.log("Pushed top child to queue: " + childTopId);
