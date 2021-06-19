@@ -1,5 +1,4 @@
 import Button from '@material-ui/core/Button';
-import { PinDropSharp } from '@material-ui/icons';
 import Card from '../UI/Card';
 
 const StartSetting = (props) => {
